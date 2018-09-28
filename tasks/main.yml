@@ -67,6 +67,7 @@
     - kubeadm-{{ kubernetes_version }}.*
     - kubectl-{{ kubernetes_version }}.*
     - kubelet-{{ kubernetes_version }}.*
+    allow_downgrade: yes
 
 # systemctl daemon-reload
 # systemctl start kubelet
