@@ -1,2 +1,2 @@
 ---
-kubernetes_version: 1.12
+kubeadm_version: 1.12

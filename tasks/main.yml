@@ -64,9 +64,9 @@
 - name: Install kubeadm and kubelet
   yum:
     pkg:
-    - kubeadm-{{ kubernetes_version }}.*
-    - kubectl-{{ kubernetes_version }}.*
-    - kubelet-{{ kubernetes_version }}.*
+    - kubeadm-{{ kubeadm_version }}.*
+    - kubectl-{{ kubeadm_version }}.*
+    - kubelet-{{ kubeadm_version }}.*
     allow_downgrade: yes
 
 # systemctl daemon-reload
