@@ -59,6 +59,7 @@
 # yum install -y \
 #   --disableexcludes kubernetes \
 #   kubeadm \
+#   kubectl \
 #   kubelet
 - name: Install kubeadm and kubelet
   yum:
