@@ -10,6 +10,27 @@
   command: swapoff -a
   when: ansible_swaptotal_mb > 0
 
+# setenforce 0
+- name: Make SELinux permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+# cat <<EOF >  /etc/sysctl.d/k8s.conf
+# net.bridge.bridge-nf-call-ip6tables = 1
+# net.bridge.bridge-nf-call-iptables = 1
+# EOF
+# sysctl --system
+- name: Pass IPv4/6 traffic to iptables' chains
+  sysctl:
+    name: "{{ item }}"
+    value: 1
+    sysctl_file: /etc/sysctl.d/k8s.conf
+    reload: yes
+  with_items:
+  - net.bridge.bridge-nf-call-iptables
+  - net.bridge.bridge-nf-call-ip6tables
+
 # cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 # [kubernetes]
 # name=Kubernetes
@@ -37,7 +58,21 @@
 
 # yum install -y \
 #   --disableexcludes kubernetes \
-#   kubeadm
-- name: Install kubeadm
+#   kubeadm \
+#   kubelet
+- name: Install kubeadm and kubelet
   yum:
-    pkg: kubeadm-1.11.3
+    pkg:
+    - kubeadm-1.11.3
+    - kubectl-1.11.3
+    - kubelet-1.11.3
+
+# systemctl daemon-reload
+# systemctl start kubelet
+# systemctl enable kubelet
+- name: Start kubelet service
+  systemd:
+    daemon-reload: yes
+    name: kubelet
+    state: started
+    enabled: yes
